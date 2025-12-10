@@ -1,6 +1,6 @@
 # LittleChef
 
-Little Chef is a mobile app for Android that helps users create, save, and manage their own recipes. Designed for home chefs, it includes features like checkable ingredients and step-by-step cooking instructions, as well as a shopping list to make grocery trips easier.  
+Little Chef is a mobile app for Android that helps users create, save, and manage their own recipes. Designed for home chefs, it includes features like checkable ingredients and step-by-step cooking instructions, as well as a shopping list to make grocery trips easier.
 
 This project is built with **React Native (Expo)**, **TypeScript**, and **Supabase** for backend and database services.
 
@@ -44,3 +44,4 @@ This project is built with **React Native (Expo)**, **TypeScript**, and **Supaba
 ```bash
 git clone https://github.com/yourusername/little-chef.git
 cd little-chef
+```
