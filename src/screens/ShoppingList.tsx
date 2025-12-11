@@ -5,6 +5,7 @@ import { addShoppingListItem, getShoppingList, deleteShoppingListItem } from "..
 import { IngredientWithQuantity } from "../types/Ingredient";
 import { v4 as uuidv4 } from "uuid";
 import styles from "../styles/global";
+import { Picker } from "@react-native-picker/picker";
 
 const AddIngredientScreen = ({ navigation }: any) => {
   const [title, setTitle] = useState("");
@@ -41,7 +42,7 @@ const AddIngredientScreen = ({ navigation }: any) => {
     // Reset inputs
     setTitle("");
     setQuantity(1);
-    setUnit("");
+    setUnit("g");
   };
 
   const handleItemPress = async (id: string) => {
@@ -60,25 +61,47 @@ const AddIngredientScreen = ({ navigation }: any) => {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Ingredient..."
-        value={title}
-        onChangeText={setTitle}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Quantity"
-        keyboardType="numeric"
-        value={quantity.toString()}
-        onChangeText={(text) => setQuantity(parseInt(text) || 1)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Unit (e.g., g, kg, tsp)"
-        value={unit}
-        onChangeText={setUnit}
-      />
+      {/* Ingredient row */}
+      <View style={styles.row}>
+        <TextInput
+          style={styles.ingredientInput}
+          placeholder="Ingredient..."
+          value={title}
+          onChangeText={setTitle}
+        />
+
+        <View style={styles.qtyBox}>
+          <TextInput
+            style={styles.qtyInput}
+            placeholder="1"
+            keyboardType="numeric"
+            value={quantity.toString()}
+            onChangeText={(text) => setQuantity(parseInt(text) || 0)}
+          />
+          <View style={styles.qtyArrows}>
+            <TouchableOpacity onPress={() => setQuantity(quantity + 1)}>
+              <Text style={styles.arrow}>▲</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setQuantity(Math.max(0, quantity - 1))}
+            >
+              <Text style={styles.arrow}>▼</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <Picker
+          selectedValue={unit}
+          style={styles.picker}
+          onValueChange={setUnit}
+        >
+          <Picker.Item label="g" value="g" />
+          <Picker.Item label="hg" value="hg" />
+          <Picker.Item label="kg" value="kg" />
+          <Picker.Item label="tsp" value="tsp" />
+          <Picker.Item label="tbsp" value="tbsp" />
+        </Picker>
+      </View>
 
       <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
         <Text style={styles.saveText}>Add Ingredient</Text>

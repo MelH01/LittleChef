@@ -4,14 +4,14 @@ import { StyleSheet } from "react-native";
 const COLORS = {
   background: "#fff",
   input: "#F3F3F3",
-  card: "#FFE5B4",
-  primary: "#FFA726",
+  card: "#d6eaf3ff",
+  primary: "#2676ffff",
   textLight: "#fff",
 };
 
 const SIZES = {
   padding: 12,
-  radius: 10,
+  radius: 0,
   rowHeight: 50,
   fontRegular: 16,
   fontSmall: 14,
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 12,
+    justifyContent: "space-between",
   },
 
   // --- Generic Inputs ---
@@ -96,8 +97,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: SIZES.padding,
     paddingVertical: 10,
     fontSize: SIZES.fontRegular,
-    marginRight: 10,
     height: SIZES.rowHeight,
+  },
+
+  timeInput: {
+    flex: 0.6,
+    backgroundColor: COLORS.input,
+    borderRadius: SIZES.radius,
+    paddingHorizontal: SIZES.padding,
+    height: SIZES.rowHeight,
+    marginLeft: 10,
+    fontSize: SIZES.fontRegular,
   },
 
   qtyInput: {
@@ -112,7 +122,7 @@ const styles = StyleSheet.create({
     borderRadius: SIZES.radius,
     paddingHorizontal: 10,
     height: SIZES.rowHeight,
-    marginRight: 10,
+    marginLeft: 10,
   },
 
   qtyArrows: {
@@ -136,6 +146,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: SIZES.padding,
     height: SIZES.rowHeight,
     justifyContent: "center",
+    marginLeft: 10,
   },
 });
 

@@ -36,6 +36,8 @@ const RecipeDetail: React.FC<Props> = ({ route }) => {
       const existingIndex = currentList.findIndex(item => item.title === ingredient.title);
       if (existingIndex !== -1) {
         // Increment quantity if already exists
+        //TODO: handle unit conversions here
+
         currentList[existingIndex].quantity += ingredient.quantity;
       } else {
         // Add new ingredient
@@ -57,6 +59,8 @@ const RecipeDetail: React.FC<Props> = ({ route }) => {
     <View style={styles.container}>
       <Text style={styles.cardHeader}>Description:</Text>
       <Text style={styles.cardText}>{recipe.description}</Text>
+      <Text style={styles.cardHeader}>Portions: {recipe.portions}</Text>
+      <Text style={styles.cardHeader}>Time: {recipe.time} minutes</Text>
 
       <Text style={styles.cardHeader}>Ingredients:</Text>
       {recipe.ingredients.map((ingredient, index) => (

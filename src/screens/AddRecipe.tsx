@@ -1,5 +1,11 @@
 import React, { useState, useCallback } from "react";
-import { View, Text, TextInput, TouchableOpacity, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 import { addRecipe } from "../storage/recipeStorage";
 import { Recipe } from "../types/Recipe";
 import { v4 as uuidv4 } from "uuid";
@@ -12,20 +18,11 @@ const AddRecipeScreen = ({ navigation }: any) => {
   const [title, setTitle] = useState("");
   const [ingredient, setIngredient] = useState("");
   const [description, setDescription] = useState("");
+  const [portions, setPortions] = useState("");
+  const [time, setTime] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [unit, setUnit] = useState("g");
   const [ingredients, setIngredients] = useState<IngredientWithQuantity[]>([]);
-
-  useFocusEffect(
-    useCallback(() => {
-      setTitle("");
-      setIngredient("");
-      setDescription("");
-      setQuantity(0);
-      setUnit("g");
-      setIngredients([]);
-    }, [])
-  );
 
   const handleAddIngredient = () => {
     if (!ingredient.trim()) return alert("Please enter an ingredient");
@@ -38,7 +35,7 @@ const AddRecipeScreen = ({ navigation }: any) => {
     setIngredients([...ingredients, newIngredient]);
     // Clear input fields
     setIngredient("");
-    setQuantity(0);
+    setQuantity(1);
     setUnit("g");
   };
 
@@ -48,20 +45,32 @@ const AddRecipeScreen = ({ navigation }: any) => {
       id: uuidv4(),
       title,
       description,
+      portions: portions ? parseInt(portions) : undefined,
+      time: time ? parseInt(time) : undefined,
       ingredients,
       steps: [],
     };
     await addRecipe(newRecipe);
+    
+    setTitle("");
+    setDescription("");
+    setPortions("");
+    setTime("");
+    setIngredients([]);
+    alert("Recipe saved!");
     navigation.goBack();
   };
 
   const handleIngredient = async (id: string) => {
-    const updatedIngredients = ingredients.filter(item => item.id !== id);
+    const updatedIngredients = ingredients.filter((item) => item.id !== id);
     setIngredients(updatedIngredients);
   };
 
   const renderItem = ({ item }: { item: IngredientWithQuantity }) => (
-    <TouchableOpacity style={styles.card} onPress={() => handleIngredient(item.id)}>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => handleIngredient(item.id)}
+    >
       <Text style={styles.cardHeader}>
         {item.title} - {item.quantity} {item.unit}
       </Text>
@@ -85,6 +94,22 @@ const AddRecipeScreen = ({ navigation }: any) => {
         multiline
       />
 
+<View style={styles.row}>
+      <TextInput
+        style={[styles.ingredientInput]}
+        placeholder="Portions..."
+        value={portions}
+        onChangeText={setPortions}
+      />
+
+      <TextInput
+        style={[styles.timeInput]}
+        placeholder="Time (minutes)..."
+        value={time}
+        onChangeText={setTime}
+      />
+</View>
+
       {/* Ingredient row */}
       <View style={styles.row}>
         <TextInput
@@ -97,7 +122,7 @@ const AddRecipeScreen = ({ navigation }: any) => {
         <View style={styles.qtyBox}>
           <TextInput
             style={styles.qtyInput}
-            placeholder="0"
+            placeholder="1"
             keyboardType="numeric"
             value={quantity.toString()}
             onChangeText={(text) => setQuantity(parseInt(text) || 0)}
@@ -106,7 +131,9 @@ const AddRecipeScreen = ({ navigation }: any) => {
             <TouchableOpacity onPress={() => setQuantity(quantity + 1)}>
               <Text style={styles.arrow}>▲</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setQuantity(Math.max(0, quantity - 1))}>
+            <TouchableOpacity
+              onPress={() => setQuantity(Math.max(0, quantity - 1))}
+            >
               <Text style={styles.arrow}>▼</Text>
             </TouchableOpacity>
           </View>

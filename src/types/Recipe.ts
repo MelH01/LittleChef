@@ -8,4 +8,5 @@ export interface Recipe {
   description: string;
   time?: number;
   portions?: number;
+  imgUri?: string;
 }
