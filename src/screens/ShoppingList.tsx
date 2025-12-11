@@ -1,63 +1,83 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { useFocusEffect } from '@react-navigation/native';
+import React, { useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { View, Text, TextInput, TouchableOpacity, FlatList } from "react-native";
-import { addIngredient, getIngredient, deleteIngredient } from "../storage/IngredientStorage";
-import { Ingredient } from "../types/Ingredient";
+import { addShoppingListItem, getShoppingList, deleteShoppingListItem } from "../storage/shoppingListStorage";
+import { IngredientWithQuantity } from "../types/Ingredient";
 import { v4 as uuidv4 } from "uuid";
 import styles from "../styles/global";
 
-const AddIngredientcreen = ({ navigation }: any) => {
+const AddIngredientScreen = ({ navigation }: any) => {
   const [title, setTitle] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [unit, setUnit] = useState("");
+  const [shoppingList, setShoppingList] = useState<IngredientWithQuantity[]>([]);
+
+  // Fetch shopping list when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      const fetchList = async () => {
+        const data = await getShoppingList();
+        setShoppingList(data);
+      };
+      fetchList();
+    }, [])
+  );
 
   const handleSave = async () => {
     if (!title.trim()) return alert("Please enter a title.");
-    console.log("Save was pressed for ", title);
 
-    const newIngredient: Ingredient = {
+    const newIngredient: IngredientWithQuantity = {
       id: uuidv4(),
-      title: title
+      title,
+      quantity,
+      unit,
     };
 
-    console.log("Ingredient created", newIngredient);
-    await addIngredient(newIngredient);
-    console.log("Ingredient added", newIngredient);
-    const fetchIngredient = async () => {
-        const data = await getIngredient();
-        setIngredient(data);
-      };
-    fetchIngredient();
+    await addShoppingListItem(newIngredient);
+
+    const updatedList = await getShoppingList();
+    setShoppingList(updatedList);
+
+    // Reset inputs
+    setTitle("");
+    setQuantity(1);
+    setUnit("");
   };
 
-  const [Ingredient, setIngredient] = useState<Ingredient[]>([]);
-  
-    useFocusEffect(
-    useCallback(() => {
-      const fetchIngredient = async () => {
-        const data = await getIngredient();
-        setIngredient(data);
-      };
-      fetchIngredient();
-    }, [])
+  const handleItemPress = async (id: string) => {
+    await deleteShoppingListItem(id);
+    const updatedList = await getShoppingList();
+    setShoppingList(updatedList);
+  };
+
+  const renderItem = ({ item }: { item: IngredientWithQuantity }) => (
+    <TouchableOpacity style={styles.card} onPress={() => handleItemPress(item.id)}>
+      <Text style={styles.cardHeader}>
+        {item.title} {item.quantity} {item.unit}
+      </Text>
+    </TouchableOpacity>
   );
-  
-    const handleIngredientPress = (IngredientId: string) => {
-      console.log('Selected Ingredient:', IngredientId);
-    };
-  
-    const renderItem = ({ item }: { item: Ingredient }) => (
-      <TouchableOpacity style={styles.card} onPress={() => handleIngredientPress(item.id)}>
-        <Text style={styles.cardHeader}>{item.title}</Text>
-      </TouchableOpacity>
-    );
 
   return (
     <View style={styles.container}>
-
       <TextInput
         style={styles.input}
-        placeholder="New Item..."
+        placeholder="Ingredient..."
         value={title}
         onChangeText={setTitle}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Quantity"
+        keyboardType="numeric"
+        value={quantity.toString()}
+        onChangeText={(text) => setQuantity(parseInt(text) || 1)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Unit (e.g., g, kg, tsp)"
+        value={unit}
+        onChangeText={setUnit}
       />
 
       <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
@@ -65,14 +85,14 @@ const AddIngredientcreen = ({ navigation }: any) => {
       </TouchableOpacity>
 
       <FlatList
-              data={Ingredient}
-              keyExtractor={(item) => item.id}
-              renderItem={renderItem}
-              contentContainerStyle={styles.list}
-              ListEmptyComponent={<Text>No Ingredient yet.</Text>}
-            />
+        data={shoppingList}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        contentContainerStyle={styles.list}
+        ListEmptyComponent={<Text>No ingredients yet.</Text>}
+      />
     </View>
   );
 };
 
-export default AddIngredientcreen;
+export default AddIngredientScreen;

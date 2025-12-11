@@ -11,11 +11,12 @@ const COLORS = {
 
 const SIZES = {
   padding: 12,
-  radius: 8,
+  radius: 10,
   rowHeight: 50,
   fontRegular: 16,
   fontSmall: 14,
   fontHeader: 26,
+  radiusBtn: 50,
 };
 
 const styles = StyleSheet.create({
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
   saveBtn: {
     backgroundColor: COLORS.primary,
     padding: SIZES.padding,
-    borderRadius: SIZES.radius + 2,
+    borderRadius: SIZES.radiusBtn,
     alignItems: "center",
     marginTop: 10,
   },
@@ -118,6 +119,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: "100%",
+    marginLeft: 40,
   },
 
   arrow: {
