@@ -20,13 +20,13 @@ const MyRecipes: React.FC = () => {
     }, [])
   );
 
-  const handleRecipePress = (recipeId: string) => {
+  const handleRecipePress = (recipeId: string, recipeTitle: string) => {
     console.log('Selected recipe:', recipeId);
-    navigation.navigate("RecipeDetail", { recipeId });
+    navigation.navigate("RecipeDetail", { recipeId, recipeTitle});
   };
 
   const renderItem = ({ item }: { item: Recipe }) => (
-    <TouchableOpacity style={styles.card} onPress={() => handleRecipePress(item.id)}>
+    <TouchableOpacity style={styles.card} onPress={() => handleRecipePress(item.id, item.title)}>
       <Text style={styles.cardHeader}>{item.title}</Text>
       <Text style={styles.cardText}>{item.description}</Text>
     </TouchableOpacity>

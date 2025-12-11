@@ -11,6 +11,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootTabParamList } from '../types/navigation';
 import { getRecipes } from '../storage/recipeStorage';
 import { Recipe } from '../types/Recipe';
+import styles from '../styles/global';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'RecipeDetail'>;
 
@@ -30,9 +31,21 @@ const RecipeDetail: React.FC<Props> = ({ route }) => {
   if (!recipe) return <Text>Loading...</Text>;
 
   return (
-    <View>
-      <Text>{recipe.title}</Text>
-      <Text>{recipe.description}</Text>
+    <View style={styles.container}>
+    <Text style={styles.cardHeader}>Description:</Text>
+      <Text style={styles.cardText}>{recipe.description}</Text>
+        <Text style={styles.cardHeader}>Ingredients:</Text>
+        {recipe.ingredients.map((ingredient, index) => (
+          <Text key={index} style={styles.cardText}>- {ingredient.title} {ingredient.quantity} {ingredient.unit}</Text>
+        ))}
+        <Text style={styles.cardHeader}>Steps:</Text>
+        {recipe.steps.length === 0 ? (
+          <Text style={styles.cardText}>No steps added.</Text>
+        ) : (
+            recipe.steps.map((step, index) => (
+                <Text key={index} style={styles.cardText}>{index + 1}. {step}</Text>
+            ))
+        )}
     </View>
   );
 };

@@ -1,7 +1,7 @@
 // Root stack for Recipes tab
 export type RecipesStackParamList = {
   MyRecipes: undefined;
-  RecipeDetail: { recipeId: string };
+  RecipeDetail: { recipeId: string, recipeTitle?: string };
 };
 
 // Bottom tabs

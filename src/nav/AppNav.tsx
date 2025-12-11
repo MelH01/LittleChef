@@ -15,8 +15,16 @@ const RecipesStack = createNativeStackNavigator<RecipesStackParamList>();
 export function RecipesStackScreen() {
   return (
     <RecipesStack.Navigator>
-      <RecipesStack.Screen name="MyRecipes" component={MyRecipes} />
-      <RecipesStack.Screen name="RecipeDetail" component={RecipeDetail} />
+      <RecipesStack.Screen 
+      name="MyRecipes" 
+      component={MyRecipes}
+      options={({title: 'My Recipes'})}
+      />
+      <RecipesStack.Screen 
+      name="RecipeDetail" 
+      component={RecipeDetail} 
+      options={({ route }) => ({title: route.params.recipeTitle || 'Could not find title'
+  })}/>
     </RecipesStack.Navigator>
   );
 }
@@ -27,8 +35,8 @@ export default function RootNavigator() {
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen name="Recipes" component={RecipesStackScreen} />
-        <Tab.Screen name="AddRecipe" component={AddRecipe} />
-        <Tab.Screen name="ShoppingList" component={ShoppingList} />
+        <Tab.Screen name="Add Recipe" component={AddRecipe} />
+        <Tab.Screen name="Shopping List" component={ShoppingList} />
       </Tab.Navigator>
     </NavigationContainer>
   );
