@@ -7,12 +7,18 @@ import MyRecipes from '../screens/MyRecipes';
 import RecipeDetail from '../screens/RecipeDetail';
 import AddRecipe from '../screens/AddRecipe';
 import ShoppingList from '../screens/ShoppingList';
+import CreateUser from '../screens/CreateUser';
+import {User} from '../types/User';
+import {getUser} from '../storage/userStorage';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 const RecipesStack = createNativeStackNavigator<RecipesStackParamList>();
 
 // Named export
 export function RecipesStackScreen() {
+  //if user exists, load user data
   return (
     <RecipesStack.Navigator>
       <RecipesStack.Screen 
@@ -29,15 +35,32 @@ export function RecipesStackScreen() {
   );
 }
 
-// Default export
 export default function RootNavigator() {
-  return (
+  const [user, setUser] = useState<User | null | undefined>(undefined); 
+  // undefined = loading, null = no user
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const u = await getUser();
+      setUser(u || null);
+    };
+    fetchUser();
+  }, []);
+
+  if (user === undefined) {
+    return <ActivityIndicator size="large" style={{ flex: 1 }} />;
+  }
+return (
     <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Recipes" component={RecipesStackScreen} />
-        <Tab.Screen name="Add Recipe" component={AddRecipe} />
-        <Tab.Screen name="Shopping List" component={ShoppingList} />
-      </Tab.Navigator>
+      {user ? (
+        <Tab.Navigator>
+          <Tab.Screen name="Recipes" component={RecipesStackScreen} />
+          <Tab.Screen name="Add Recipe" component={AddRecipe} />
+          <Tab.Screen name="Shopping List" component={ShoppingList} />
+        </Tab.Navigator>
+      ) : (
+        <CreateUser />
+      )}
     </NavigationContainer>
   );
 }

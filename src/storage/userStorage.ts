@@ -3,23 +3,19 @@ import { User } from "../types/User";
 
 const STORAGE_KEY = "USER";
 
-export async function getUser(): Promise<User[]> {
+export async function getUser(): Promise<User | null> {
   const data = await AsyncStorage.getItem(STORAGE_KEY);
-  return data ? JSON.parse(data) : [];
+  return data ? JSON.parse(data) : null;
 }
 
-export async function saveUser(user: User[]) {
+export async function saveUser(user: User) {
   await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(user));
 }
 
 export async function addUser(user: User) {
-  const existing = await getUser();
-  existing.push(user);
-  await saveUser(existing);
+  await saveUser(user);
 }
 
-export async function deleteUser(id: string) {
-  const list = await getUser();
-  const updated = list.filter(r => r.id !== id);
-  await saveUser(updated);
+export async function deleteUser() {
+  await AsyncStorage.removeItem(STORAGE_KEY);
 }
